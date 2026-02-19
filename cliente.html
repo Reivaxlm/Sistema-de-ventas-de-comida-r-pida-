@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/cliente.css">
+    <style>
+        body {
+          background-color: #fcc404;;
+        }
+      </style>
+</head>
+<body>
+    <br>
+    <div class="div-titulo">
+        <h1>Datos del Cliente</h1>
+    </div>
+    <div class="contenedores">
+        <div class="infocliente">
+            
+            <form action="cliente.php" method="post">
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre_cliente" id="nombre_cliente" class="form-control">
+                <label for="apellido">Apellido</label>
+                <input type="text" name="apellido_cliente" id="apellido_cliente" class="form-control">
+                <label for="cedula">Cédula</label>
+                <input type="number" name="cedula_cliente" id="cedula_cliente" class="form-control">
+                <label for="telefono">Teléfono</label>
+                <input type="number" name="telefono_cliente" id="telefono_cliente" class="form-control">
+                <input type="submit"> </label>
+                
+                
+        
+            
+        </div>
+        <div class="Banquito">
+            
+                <label for="bancoo">Método de Pago</label>    
+                <select name="banco">
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Banco Provincial S.A. Banco Universal">Banco Provincial S.A. Banco Universal</option>
+                    <option value="Banco Mercantil C.A. Banco Universal">Banco Mercantil C.A. Banco Universal</option>
+                    <option value="FIVENEZ Banco Universal">FIVENEZ Banco Universal</option>
+                    <option value="Citibank, N.A. Banco Universal">Citibank, N.A. Banco Universal</option>
+                    <option value="Banco Internacional Interbank, Banco Universal">Banco Internacional Interbank, Banco Universal</option>
+                    <option value="Banco Exterior C.A. Banco Universal">Banco Exterior C.A. Banco Universal</option>
+                    <option value="Banco Caroní C.A. Banco Universal">Banco Caroní C.A. Banco Universal</option>
+                    <option value="Banesco Banco Universal C.A.">Banesco Banco Universal C.A.</option>
+                    <option value="Banco Orinoco C.A. Banco Universal">Banco Orinoco C.A. Banco Universal</option>
+                    <option value="Banco del Caribe, C.A. Banco Universal">Banco del Caribe, C.A. Banco Universal</option>
+                    <option value="Banco Caracas C.A. Banco Universal">Banco Caracas C.A. Banco Universal</option>
+                    <option value="Corp Banca, C.A.">Corp Banca, C.A.</option>
+                    <option value="Bolívar Banco Universal">Bolívar Banco Universal</option>
+                    <option value="Fondo Común C.A. Banco Universal">Fondo Común C.A. Banco Universal</option>
+                    <option value="Banco Occidental de Descuento, Banco Universal C.A.">Banco Occidental de Descuento, Banco Universal C.A.</option>
+                    <option value="Banco Sofitasa Banco Universal, C.A.">Banco Sofitasa Banco Universal, C.A.</option>
+                    <option value="Del Sur Banco Universal C.A.">Del Sur Banco Universal C.A.</option>
+                    <option value="Banco del Tesoro, C.A. Banco Universal">Banco del Tesoro, C.A. Banco Universal</option>
+                    <option value="Venezolano de Crédito S.A. Banco Universal">Venezolano de Crédito S.A. Banco Universal</option>
+                    <option value="Banco de Venezuela S.A. Banco Universal">Banco de Venezuela S.A. Banco Universal</option>
+                    <option value="Banco Canarias de Venezuela Banco Universal">Banco Canarias de Venezuela Banco Universal</option>
+                </select>
+                <a href="Principal.php"> Volver </a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

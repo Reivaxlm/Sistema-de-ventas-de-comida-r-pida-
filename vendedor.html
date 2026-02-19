@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Vendedor</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="div-titulo">
+            <h1>Configuración de Perfil</h1>
+        </div>
+
+        <div class="contenedor">
+            <form action="vendedor.php" method="post" enctype="multipart/form-data" class="grid-form">
+                
+                <div class="seccion">
+                  <div class="upload-container" onclick="explorar()">
+                    <img src="imgs/flechitaabajo.png" id="img-preview">
+                  </div>
+                    
+                    <input type="file" name="imagen" id="imagen" style="display:none;" onchange="previewImagen()">
+                    <p style="text-align:center; font-size: 12px; color: #666;">Toca el círculo para cambiar foto</p>
+
+                    <label for="nombre">Nombre</label>
+                    <input type="text" name="nombre_vendedor" required placeholder="Ej. Luis">
+
+                    <label for="apellido">Apellido</label>
+                    <input type="text" name="apellido_vendedor" required placeholder="Ej. Melendez">
+                </div>
+
+                <div class="seccion">
+                    <label for="cedula">Cédula</label>
+                    <input type="number" name="cedula_vendedor" required>
+
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" name="telefono_vendedor" required>
+
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" name="correo_vendedor" required>
+
+                    <label for="descripcion">Biografía / Descripción</label>
+                    <textarea name="descripcion_vendedor" rows="5" placeholder="Cuéntanos sobre ti..."></textarea>
+                </div>
+
+                <div class="full-width actions">
+                    <button type="submit" name="guardar" class="btn-primary">Guardar Cambios</button>
+                    <button type="reset" class="btn-secondary">Limpiar Formulario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+<script>
+function explorar() {
+    // Esto busca el input con id="imagen" y lo activa
+    document.getElementById('imagen').click();
+}
+
+function previewImagen() {
+    const file = document.getElementById('imagen').files[0];
+    const preview = document.getElementById('img-preview');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+}
+</script>
+    
+</body>
+</html>

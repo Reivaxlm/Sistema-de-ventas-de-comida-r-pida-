@@ -1,0 +1,37 @@
+CREATE DATABASE IF NOT EXISTS sistemadeventas;
+USE sistemadeventas;
+DROP TABLE IF EXISTS pagos;
+CREATE TABLE pagos (
+  id INT(16) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  pago INT(200) NOT NULL,
+  pag_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE registro (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
+    username VARCHAR(30) NOT NULL,
+    password VARCHAR(30) NOT NULL,
+    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE perfil (
+  id INT(16) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre_vendedor VARCHAR(50) NOT NULL,
+  apellido_vendedor VARCHAR(50) NOT NULL,
+  cedula_vendedor INT(20) NOT NULL,
+  telefono_vendedor INT(11) NOT NULL,
+  correo_vendedor VARCHAR(50) NOT NULL,
+  descripcion_vendedor VARCHAR(300) NOT NULL,
+  imagen LONGBLOB NOT NULL
+);
+CREATE TABLE cliente (
+  id INT(16) NOT NULL AUTO_INCREMENT,
+  nombre_cliente VARCHAR(50) NOT NULL,
+  apellido_cliente VARCHAR(50) NOT NULL,
+  cedula_cliente INT(20) NOT NULL,
+  telefono_cliente INT(20) NOT NULL,
+  metodo_pago VARCHAR(50) NOT NULL,
+  PRIMARY KEY (id)
+);

@@ -1,0 +1,125 @@
+body {
+
+  margin: 0;
+  padding: 0;
+  background: url(../img/Fondo.png) ; 
+  font-family: sans-serif;
+  background-size:cover;
+
+}
+
+
+.Login-caja form{
+
+  top:200px;
+  transform: translate(-9%,-40%);
+  width: 106%;
+  height: 250px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 20px;
+  padding-top: 30px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
+  
+
+}
+.Login-caja {
+
+width: 420px;
+height: 420px;
+background: transparent;
+color: #000;
+top: 50%;
+left: 50%;
+position: absolute;
+transform: translate(-50%,-50%);
+box-sizing: border-box; 
+
+
+}
+
+.Login-caja .avatar{
+
+width: 150px;
+  height: 150px;
+border-radius: 50%;
+position: relative; z-index:100;
+top: -45px;
+left: calc(44% - 65px);
+
+}
+
+.Login-caja h1{
+
+margin: 0;
+padding: 0 0 20px;
+text-align: center;
+font-size: 22px;
+
+
+}
+
+
+.Login-caja label {
+
+margin: 0;
+padding: 0;
+font-weight: bold;
+display: block;
+
+}
+.Login-caja input{
+
+width: 100%;
+margin-bottom: 20px;
+ color: black;
+ border-bottom: 1px solid #fff;
+ background-color: transparent;
+ border:2px solid #000;
+ height: 40px;
+}
+.Login-caja input[type="text"]{
+border:none;
+border-bottom: 1px solid #fff;
+background: transparent;
+outline:none;
+color: #000;
+font-size: 16px;
+box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+
+}
+.Login-caja input[type="password"]{
+
+border:none;
+border-bottom: 1px solid #fff;
+outline:none;
+ font-size: 16px;
+color: #000;
+box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+}
+
+.Login-box input[type="submit"] 
+{
+
+border: 1px;
+  cursor: pointer;
+  background: #000;
+  color: #fff;
+  border-radius: 2px;
+}
+
+a{
+  color: #000;
+  text-align: center;
+
+}
+
+input[type="submit"]{
+  background-color: #f68e0b;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

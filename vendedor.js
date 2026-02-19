@@ -1,0 +1,3 @@
+function limpiar(){
+    formulario.reset();
+}

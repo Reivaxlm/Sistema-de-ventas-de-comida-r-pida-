@@ -1,0 +1,34 @@
+CREATE TABLE pagos (
+  id INT(16) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  pago INT(200) NOT NULL,
+  pag_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+[8:50 a. m., 17/5/2023] Orlando IUJO: CREATE TABLE vendedores (
+  id INT(16) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre_vendedor VARCHAR(50) NOT NULL,
+  apellido_vendedor VARCHAR(50) NOT NULL,
+  cedula_vendedor INT(20) NOT NULL,
+  telefono_vendedor INT(11) NOT NULL,
+  correo_vendedor VARCHAR(50) NOT NULL,
+  descripcion_vendedor VARCHAR(300) NOT NULL,
+  imagen LONGBLOB NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+[8:51 a. m., 17/5/2023] Orlando IUJO: CREATE TABLE perfil (
+  id INT(16) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre_vendedor VARCHAR(50) NOT NULL,
+  apellido_vendedor VARCHAR(50) NOT NULL,
+  cedula_vendedor INT(20) NOT NULL,
+  telefono_vendedor INT(11) NOT NULL,
+  correo_vendedor VARCHAR(50) NOT NULL,
+  descripcion_vendedor VARCHAR(300) NOT NULL,
+  imagen LONGBLOB NOT NULL
+)
+CREATE TABLE clientes (
+  id INT(16) NOT NULL AUTO_INCREMENT,
+  nombre_cliente VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  apellido_cliente VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  cedula_cliente VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  telefono_cliente VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  metodo_pago VARCHAR(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (id)
+);
