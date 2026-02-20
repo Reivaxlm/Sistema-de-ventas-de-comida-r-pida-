@@ -1,70 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Finalizar Pedido | Burger Designers</title>
     <link rel="stylesheet" href="css/cliente.css">
-    <style>
-        body {
-          background-color: #fcc404;;
-        }
-      </style>
 </head>
 <body>
-    <br>
-    <div class="div-titulo">
-        <h1>Datos del Cliente</h1>
-    </div>
-    <div class="contenedores">
-        <div class="infocliente">
-            
-            <form action="cliente.php" method="post">
-                <label for="nombre">Nombre</label>
-                <input type="text" name="nombre_cliente" id="nombre_cliente" class="form-control">
-                <label for="apellido">Apellido</label>
-                <input type="text" name="apellido_cliente" id="apellido_cliente" class="form-control">
-                <label for="cedula">Cédula</label>
-                <input type="number" name="cedula_cliente" id="cedula_cliente" class="form-control">
-                <label for="telefono">Teléfono</label>
-                <input type="number" name="telefono_cliente" id="telefono_cliente" class="form-control">
-                <input type="submit"> </label>
-                
-                
-        
-            
+    <div class="main-container">
+        <div class="div-titulo">
+            <h1>Finalizar Pedido</h1>
         </div>
-        <div class="Banquito">
-            
-                <label for="bancoo">Método de Pago</label>    
-                <select name="banco">
-                    <option value="Efectivo">Efectivo</option>
-                    <option value="Banco Provincial S.A. Banco Universal">Banco Provincial S.A. Banco Universal</option>
-                    <option value="Banco Mercantil C.A. Banco Universal">Banco Mercantil C.A. Banco Universal</option>
-                    <option value="FIVENEZ Banco Universal">FIVENEZ Banco Universal</option>
-                    <option value="Citibank, N.A. Banco Universal">Citibank, N.A. Banco Universal</option>
-                    <option value="Banco Internacional Interbank, Banco Universal">Banco Internacional Interbank, Banco Universal</option>
-                    <option value="Banco Exterior C.A. Banco Universal">Banco Exterior C.A. Banco Universal</option>
-                    <option value="Banco Caroní C.A. Banco Universal">Banco Caroní C.A. Banco Universal</option>
-                    <option value="Banesco Banco Universal C.A.">Banesco Banco Universal C.A.</option>
-                    <option value="Banco Orinoco C.A. Banco Universal">Banco Orinoco C.A. Banco Universal</option>
-                    <option value="Banco del Caribe, C.A. Banco Universal">Banco del Caribe, C.A. Banco Universal</option>
-                    <option value="Banco Caracas C.A. Banco Universal">Banco Caracas C.A. Banco Universal</option>
-                    <option value="Corp Banca, C.A.">Corp Banca, C.A.</option>
-                    <option value="Bolívar Banco Universal">Bolívar Banco Universal</option>
-                    <option value="Fondo Común C.A. Banco Universal">Fondo Común C.A. Banco Universal</option>
-                    <option value="Banco Occidental de Descuento, Banco Universal C.A.">Banco Occidental de Descuento, Banco Universal C.A.</option>
-                    <option value="Banco Sofitasa Banco Universal, C.A.">Banco Sofitasa Banco Universal, C.A.</option>
-                    <option value="Del Sur Banco Universal C.A.">Del Sur Banco Universal C.A.</option>
-                    <option value="Banco del Tesoro, C.A. Banco Universal">Banco del Tesoro, C.A. Banco Universal</option>
-                    <option value="Venezolano de Crédito S.A. Banco Universal">Venezolano de Crédito S.A. Banco Universal</option>
-                    <option value="Banco de Venezuela S.A. Banco Universal">Banco de Venezuela S.A. Banco Universal</option>
-                    <option value="Banco Canarias de Venezuela Banco Universal">Banco Canarias de Venezuela Banco Universal</option>
-                </select>
-                <a href="Principal.php"> Volver </a>
-            </form>
-        </div>
+
+        <form action="cliente.php" method="POST" class="formulario-final">
+            <div class="seccion-datos">
+                <h2>1. Tus Datos</h2>
+                <div class="input-group">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre_cliente" required placeholder="Ej. Luis">
+                </div>
+                <div class="input-group">
+                    <label>Apellido</label>
+                    <input type="text" name="apellido_cliente" required placeholder="Ej. Meléndez">
+                </div>
+                <div class="input-group">
+                    <label>Cédula</label>
+                    <input type="number" name="cedula_cliente" required>
+                </div>
+                <div class="input-group">
+                    <label>Teléfono</label>
+                    <input type="number" name="telefono_cliente" required>
+                </div>
+            </div>
+
+            <div class="seccion-pago">
+                <h2>2. Método de Pago</h2>
+                <div class="input-group">
+                    <label>¿Cómo deseas pagar?</label>
+                    <select name="metodo_pago" id="metodo_pago" onchange="mostrarInstrucciones()" required>
+                        <option value="" disabled selected>Selecciona un método</option>
+                        <option value="Pago Movil">Pago Móvil</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia">Transferencia</option>
+                    </select>
+                </div>
+
+                <div id="instrucciones-pago" class="caja-instrucciones" style="display:none;">
+                    <p id="texto-datos"></p>
+                    <div class="input-group">
+                        <label>Referencia (Últimos 4 dígitos)</label>
+                        <input type="text" name="referencia" id="referencia" placeholder="0000" maxlength="4">
+                    </div>
+                </div>
+
+                <div class="resumen-final">
+                  <h2 id="total-final">Total a Pagar: <span>$0.00</span></h2>
+                </div>
+
+                <input type="hidden" name="monto_total" id="input_monto_oculto">
+
+                <div class="botones-accion">
+                    <button type="submit" class="btn-confirmar">CONFIRMAR COMPRA</button>
+                    <a href="pedido.html" class="btn-regresar-premium">
+                       <span class="icon">←</span>
+                       <span class="text">VOLVER AL MENÚ</span>
+                    </a>
+                </div>
+            </div>
+        </form>
     </div>
+
+    <script>
+        // Función de instrucciones (La que ya tenías)
+        function mostrarInstrucciones() {
+            const metodo = document.getElementById('metodo_pago').value;
+            const caja = document.getElementById('instrucciones-pago');
+            const texto = document.getElementById('texto-datos');
+            const inputRef = document.getElementById('referencia');
+            
+            if (metodo === "Efectivo") {
+                caja.style.display = "none";
+                inputRef.required = false;
+            } else {
+                caja.style.display = "block";
+                inputRef.required = true;
+                if (metodo === "Pago Movil") {
+                    texto.innerHTML = "<strong>Pago Móvil:</strong><br>Banesco | 0412-1234567 | V-12.345.678";
+                } else if (metodo === "Transferencia") {
+                    texto.innerHTML = "<strong>Transferencia:</strong><br>Banesco | 0134-0000-0000-0000 | Burger Designers";
+                }
+            }
+        }
+
+        // Cargar total (Corregido para que coincida con el HTML)
+        document.addEventListener('DOMContentLoaded', () => {
+            const montoGuardado = localStorage.getItem('montoFactura'); 
+
+            if (montoGuardado) {
+                // Actualizar el texto visual - USANDO ID total-final
+                const displayTotal = document.getElementById('total-final');
+                if (displayTotal) {
+                    displayTotal.innerHTML = `Total a Pagar: <span style="color: #fcc404;">$${montoGuardado}</span>`;
+                }
+                // Llenar el input oculto
+                document.getElementById('input_monto_oculto').value = montoGuardado;
+            } else {
+                alert("El carrito está vacío.");
+                window.location.href = "pedido.html";
+            }
+        });
+    </script>
 </body>
 </html>

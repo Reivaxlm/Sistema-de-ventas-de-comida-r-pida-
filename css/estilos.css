@@ -389,3 +389,102 @@ button[type="submit"]:hover {
         grid-template-columns: 1fr; 
     }
 }
+
+.container-cart-products {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 350px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+/* Tarjetas de productos más modernas */
+.item {
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.info-product h2 {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #2c3e50;
+}
+
+/* El botón de añadir más llamativo */
+.btn-add-cart {
+    background-color: #e67e22;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-add-cart:hover {
+    background-color: #d35400;
+}
+/* ELIMINACIÓN TOTAL DE ESTILOS POR DEFECTO */
+.btn-regresar-impacto, 
+.btn-regresar-impacto:link, 
+.btn-regresar-impacto:visited {
+    text-decoration: none !important;
+    color: #000 !important;
+    outline: none !important;
+}
+
+.btn-regresar-impacto {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background-color: #ffffff;
+    border: 3px solid #000; /* Borde grueso profesional */
+    padding: 12px 25px;
+    border-radius: 12px; /* Menos redondo, más tipo tarjeta */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900; /* Letra bien gruesa */
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 6px 6px 0px #000; /* Sombra sólida negra */
+    transition: all 0.2s ease;
+    position: relative;
+    margin: 20px 0;
+}
+
+/* El círculo del icono con tu rojo */
+.icono-flecha {
+    background-color: #dd1919;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #000;
+}
+
+/* EFECTO CUANDO PASAS EL MOUSE (HOVER) */
+.btn-regresar-impacto:hover {
+    transform: translate(2px, 2px); /* Se hunde un poco al tocarlo */
+    box-shadow: 2px 2px 0px #000; /* La sombra se achica */
+    background-color: #fcc404; /* Cambia a tu amarillo */
+}
+
+/* EFECTO CUANDO LE DAS CLICK */
+.btn-regresar-impacto:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px #000;
+}
