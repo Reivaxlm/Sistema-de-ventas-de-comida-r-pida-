@@ -12,7 +12,7 @@
             <h1>Finalizar Pedido</h1>
         </div>
 
-        <form action="cliente.php" method="POST" class="formulario-final">
+        <form action="cliente.php" method="POST" class="formulario-final" id="form-pedido">
             <div class="seccion-datos">
                 <h2>1. Tus Datos</h2>
                 <div class="input-group">
@@ -58,10 +58,11 @@
                 </div>
 
                 <input type="hidden" name="monto_total" id="input_monto_oculto">
+                <input type="hidden" name="carrito_datos" id="input_carrito_oculto">
 
                 <div class="botones-accion">
                     <button type="submit" class="btn-confirmar">CONFIRMAR COMPRA</button>
-                    <a href="pedido.html" class="btn-regresar-premium">
+                    <a href="pedido.php" class="btn-regresar-premium">
                        <span class="icon">←</span>
                        <span class="text">VOLVER AL MENÚ</span>
                     </a>
@@ -71,7 +72,7 @@
     </div>
 
     <script>
-        // Función de instrucciones (La que ya tenías)
+        // Función para mostrar datos de pago según el método seleccionado
         function mostrarInstrucciones() {
             const metodo = document.getElementById('metodo_pago').value;
             const caja = document.getElementById('instrucciones-pago');
@@ -92,21 +93,34 @@
             }
         }
 
-        // Cargar total (Corregido para que coincida con el HTML)
+        // Al cargar la página, recuperamos los datos de la "mochila" (LocalStorage)
         document.addEventListener('DOMContentLoaded', () => {
             const montoGuardado = localStorage.getItem('montoFactura'); 
+            const productosGuardados = localStorage.getItem('carrito_productos');
 
-            if (montoGuardado) {
-                // Actualizar el texto visual - USANDO ID total-final
+            if (montoGuardado && productosGuardados) {
+                // 1. Mostramos el total visualmente
                 const displayTotal = document.getElementById('total-final');
                 if (displayTotal) {
                     displayTotal.innerHTML = `Total a Pagar: <span style="color: #fcc404;">$${montoGuardado}</span>`;
                 }
-                // Llenar el input oculto
+                
+                // 2. Llenamos los campos ocultos que irán al PHP
                 document.getElementById('input_monto_oculto').value = montoGuardado;
+                document.getElementById('input_carrito_oculto').value = productosGuardados;
+
             } else {
-                alert("El carrito está vacío.");
-                window.location.href = "pedido.html";
+                alert("El carrito está vacío. Regresando al menú...");
+                window.location.href = "pedido.php";
+            }
+        });
+
+        // Verificación final antes de enviar el formulario
+        document.getElementById('form-pedido').addEventListener('submit', function(e) {
+            const carrito = document.getElementById('input_carrito_oculto').value;
+            if (!carrito || carrito === "[]") {
+                alert("Error: No hay productos detectados para descontar inventario.");
+                e.preventDefault();
             }
         });
     </script>

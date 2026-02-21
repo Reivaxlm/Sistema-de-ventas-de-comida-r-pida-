@@ -67,22 +67,22 @@ rowProduct.addEventListener('click', e => {
         showHTML();
     }
 });
-
 // --- Lógica para el botón "Procesar Compra" ---
-// Detectamos el clic en el botón negro que ya tienes en tu HTML
 document.addEventListener('click', e => {
     if (e.target.classList.contains('boton')) {
-        // Obtenemos el total actual del carrito (quitando el $)
-        const totalParaEnviar = valorTotal.innerText.replace('$', '');
-        
-        // Lo guardamos en la memoria del navegador
-        localStorage.setItem('montoFactura', totalParaEnviar);
-        
-        // Si el total es 0, avisamos al usuario
-        if (totalParaEnviar === '0' || totalParaEnviar === '') {
+        if (allProducts.length === 0) {
             alert("El carrito está vacío");
-            e.preventDefault(); // Evita que pase a la página de cliente
+            e.preventDefault();
+            return;
         }
+
+        // GUARDAMOS TODO EL CARRITO (productos y total)
+        const totalActual = valorTotal.innerText.replace('$', '');
+        localStorage.setItem('carrito_productos', JSON.stringify(allProducts));
+        localStorage.setItem('montoFactura', totalActual);
+
+        // AHORA SÍ, vamos a la página del cliente
+        window.location.href = 'cliente.html';
     }
 });
 

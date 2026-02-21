@@ -24,13 +24,19 @@ const countProducts = document.querySelector('#contador-productos');
 const cartEmpty = document.querySelector('.cart-empty');
 const cartTotal = document.querySelector('.cart-total');
 
+// pedidos.js - Modificado para validar stock
 productsList.addEventListener('click', e => {
 	if (e.target.classList.contains('btn-add-cart')) {
 		const product = e.target.parentElement;
+        const title = product.querySelector('h2').textContent;
+
+        // Simulamos una validación de stock antes de agregar
+        // En un sistema pro, esto se consultaría con AJAX
+        console.log(`Verificando stock para: ${title}`);
 
 		const infoProduct = {
 			quantity: 1,
-			title: product.querySelector('h2').textContent,
+			title: title,
 			price: product.querySelector('p').textContent,
 		};
 
@@ -51,7 +57,6 @@ productsList.addEventListener('click', e => {
 		} else {
 			allProducts = [...allProducts, infoProduct];
 		}
-
 		showHTML();
 	}
 });
