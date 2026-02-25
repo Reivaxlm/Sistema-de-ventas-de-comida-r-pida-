@@ -1,66 +1,50 @@
 <?php
-require('connection.php'); 
-session_start(); // <--- ERROR 1 CORREGIDO: Necesario para saber quién eres
+session_start();
+include('connection.php');
 
-// Validar que el usuario esté logueado
-if (!isset($_SESSION['id'])) {
-    die("Error: No has iniciado sesión.");
-}
+// 1. Obtenemos el ID del usuario de la sesión
+$id_usuario = $_SESSION['id']; 
 
 if (isset($_POST['guardar'])) {
-    $id_usuario = $_SESSION['id']; // <--- ESTO CONECTA EL PERFIL CON TU CUENTA
-    
     $nombre = $_POST['nombre_vendedor'];
-    $apellido = $_POST['apellido_vendedor'];
-    $cedula = $_POST['cedula_vendedor'];
-    $telefono = $_POST['telefono_vendedor'];
-    $correo = $_POST['correo_vendedor'];
-    $descripcion = $_POST['descripcion_vendedor'];
+    // ... (tus otras variables de texto)
 
-    $contenido_final = "";
+    // 2. BUSCAR LA IMAGEN ACTUAL EN LA BASE DE DATOS
+    // Esto es vital para que si no suben nada, no se borre lo que ya existe
+    $consulta_actual = mysqli_query($conn, "SELECT imagen FROM perfil WHERE id_usuario = '$id_usuario'");
+    $datos_perfil = mysqli_fetch_assoc($consulta_actual);
+    $ruta_imagen_final = $datos_perfil['imagen']; // Por defecto, dejamos la que ya estaba
 
-    // --- (Tu código de procesamiento de imagen se mantiene igual) ---
-    if (isset($_FILES['imagen']) && $_FILES['imagen']['tmp_name'] != "") {
+    // 3. VERIFICAR SI SUBIERON UNA IMAGEN NUEVA
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
+        $nombre_archivo = $_FILES['imagen']['name'];
         $ruta_temporal = $_FILES['imagen']['tmp_name'];
-        $info = getimagesize($ruta_temporal);
-        if ($info !== false) {
-            $tipo_mime = $info['mime'];
-            switch ($tipo_mime) {
-                case 'image/jpeg': $fuente = imagecreatefromjpeg($ruta_temporal); break;
-                case 'image/png':  $fuente = imagecreatefrompng($ruta_temporal); break;
-                case 'image/webp': $fuente = imagecreatefromwebp($ruta_temporal); break;
-                default: $fuente = null;
-            }
-            if ($fuente) {
-                $lienzo = imagecreatetruecolor(500, 500);
-                imagealphablending($lienzo, false);
-                imagesavealpha($lienzo, true);
-                imagecopyresampled($lienzo, $fuente, 0, 0, 0, 0, 500, 500, $info[0], $info[1]);
-                ob_start();
-                imagejpeg($lienzo, null, 85);
-                $contenido_final = ob_get_clean();
-                imagedestroy($fuente);
-                imagedestroy($lienzo);
-            }
+        $extension = pathinfo($nombre_archivo, PATHINFO_EXTENSION);
+        
+        // Creamos un nombre único para evitar duplicados
+        $nuevo_nombre = time() . "_" . $id_usuario . "." . $extension;
+        $destino = "imgs/" . $nuevo_nombre;
+
+        // Intentamos mover el archivo
+        if (move_uploaded_file($ruta_temporal, $destino)) {
+            $ruta_imagen_final = $destino; // Solo si se subió con éxito, actualizamos la ruta
         }
     }
 
-    // ERROR 2 CORREGIDO: Cambiamos INSERT por REPLACE e incluimos el ID
-    // Esto evita que se creen usuarios infinitos y actualiza el tuyo
-    $query = "REPLACE INTO perfil (id, nombre_vendedor, apellido_vendedor, cedula_vendedor, telefono_vendedor, correo_vendedor, descripcion_vendedor, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    
-    $stmt = mysqli_prepare($conn, $query);
-    
-    // Ahora son 8 parámetros (agregamos la "i" al principio para el ID entero)
-    mysqli_stmt_bind_param($stmt, "isssssss", $id_usuario, $nombre, $apellido, $cedula, $telefono, $correo, $descripcion, $contenido_final);
-    
-    if (mysqli_stmt_execute($stmt)) {
-        echo "<script>alert('Perfil actualizado con éxito'); window.location='Principal.php';</script>";
+    // 4. ACTUALIZAR O INSERTAR EN LA BD
+    // Usamos $ruta_imagen_final, que tendrá o la imagen nueva o la vieja
+    if (mysqli_num_rows($consulta_actual) > 0) {
+        $sql = "UPDATE perfil SET 
+                nombre='$nombre', 
+                imagen='$ruta_imagen_final' 
+                WHERE id_usuario='$id_usuario'";
     } else {
-        echo "Error al guardar: " . mysqli_error($conn);
+        $sql = "INSERT INTO perfil (id_usuario, nombre, imagen) 
+                VALUES ('$id_usuario', '$nombre', '$ruta_imagen_final')";
     }
-    
-    mysqli_stmt_close($stmt);
+
+    if (mysqli_query($conn, $sql)) {
+        echo "<script>alert('¡Perfil guardado!'); window.location.href='Principal.php';</script>";
+    }
 }
-mysqli_close($conn);
 ?>
