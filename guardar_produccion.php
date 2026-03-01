@@ -34,4 +34,21 @@ if (isset($_POST['agregar_producto'])) {
         echo "Error al subir la imagen. Revisa los permisos de la carpeta img.";
     }
 }
+
+// --- LÓGICA 2: VINCULAR INGREDIENTE A RECETA (LO QUE TE FALTABA) ---
+if (isset($_POST['btn_receta'])) {
+    $id_producto = $_POST['id_producto'];
+    $id_insumo = $_POST['id_insumo'];
+    $cantidad = $_POST['cant_receta']; // Este es el dato que viene del formulario
+
+    // Cambiamos el nombre de la columna a 'cantidad_consumo'
+    $sql_receta = "INSERT INTO recetas (id_producto, id_insumo, cantidad_consumo) 
+                   VALUES ('$id_producto', '$id_insumo', '$cantidad')";
+
+    if (mysqli_query($conn, $sql_receta)) {
+        echo "<script>alert('¡Ingrediente vinculado con éxito!'); window.location.href = 'admin.php';</script>";
+    } else {
+        echo "Error al guardar: " . mysqli_error($conn);
+    }
+}
 ?>

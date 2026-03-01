@@ -1,14 +1,14 @@
 <?php
-include('connection.php');
+require('connection.php');
 
-// Recibimos los datos enviados por el JavaScript (AJAX)
+// Leemos los datos enviados por el JavaScript
 $data = json_decode(file_get_contents('php://input'), true);
 
 if (isset($data['id']) && isset($data['estado'])) {
-    $id = $data['id'];
-    $estado = $data['estado'];
+    $id = mysqli_real_escape_string($conn, $data['id']);
+    $estado = mysqli_real_escape_string($conn, $data['estado']);
 
-    // Actualizamos el estado en la tabla cliente
+    // Actualizamos la tabla cliente
     $sql = "UPDATE cliente SET estado = '$estado' WHERE id = '$id'";
     
     if (mysqli_query($conn, $sql)) {
@@ -16,5 +16,7 @@ if (isset($data['id']) && isset($data['estado'])) {
     } else {
         echo json_encode(['success' => false, 'error' => mysqli_error($conn)]);
     }
+} else {
+    echo json_encode(['success' => false, 'error' => 'Datos incompletos']);
 }
 ?>

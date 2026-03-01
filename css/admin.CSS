@@ -14,3 +14,111 @@ padding: 0;
 font-weight: bold;
 display: block;
 }
+body { font-family: 'Poppins', sans-serif; background: #f0f0f0; padding: 20px; color: #1a1a1a; }
+.wrapper { max-width: 1300px; margin: auto; }
+.grid-main { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        
+/* TARJETAS */
+.card { background: #fff; padding: 20px; border: 3px solid #000; border-radius: 12px; box-shadow: 6px 6px 0px #000; position: relative; }
+.card-yellow { background: #fcc404; box-shadow: 6px 6px 0px #000; }
+.card-dark { background: #1a1a1a; color: #fff; border-color: #fcc404; }
+        
+/* TABLAS */
+.table-container { background: #fff; border: 3px solid #000; border-radius: 12px; padding: 20px; margin-top: 25px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th { background: #fcc404; color: #000; padding: 12px; border: 2px solid #000; text-transform: uppercase; font-size: 13px; }
+td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; font-size: 14px; }
+tr:hover { background: #fffdf5; }
+
+.btn-excel { background: #28a745; color: white; padding: 10px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; border: 3px solid #000; display: inline-block; transition: 0.3s; }
+.btn-excel:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px #000; }
+        
+.badge { background: #000; color: #fcc404; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+.trend { font-size: 12px; font-weight: bold; }
+
+/* 1. CORRECCIÓN DE DESBORDAMIENTO (Fundamental) */
+.card *, .card::before, .card::after {
+    box-sizing: border-box; /* Esto evita que los inputs se salgan del cuadro */
+}
+
+/* 2. ESTILO MEJORADO PARA LOS INPUTS Y SELECTS */
+.card .input-group input, 
+.card .input-group select,
+.card form select,
+.card form input[type="number"],
+.card form input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 3px solid #000;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 600;
+    background-color: #fff;
+    margin-bottom: 5px;
+    display: block; /* Asegura que ocupen su propia línea */
+}
+
+/* 3. ESTILO ESPECIAL PARA EL INPUT DE IMAGEN */
+/* Ocultamos el texto feo por defecto y lo hacemos lucir como un botón */
+.card input[type="file"] {
+    border: 3px dashed #000; /* Borde discontinuo para indicar "subida" */
+    padding: 10px;
+    background: #f9f9f9;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Estilizamos el botón interno del input file */
+.card input[type="file"]::file-selector-button {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    margin-right: 10px;
+    font-family: inherit;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card input[type="file"]::file-selector-button:hover {
+    background: #dd1919; /* Rojo al pasar el mouse */
+}
+
+/* 4. BOTONES (REFORZANDO EL ESTILO DE LA CAPTURA) */
+.card button[name="agregar_producto"] {
+    width: 100%;
+    padding: 15px;
+    background: #fcc404;
+    color: #000;
+    border: 3px solid #000;
+    border-radius: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px #000;
+    margin-top: 10px;
+}
+
+.card button[name="btn_receta"] {
+    width: 100%;
+    padding: 15px;
+    background: #000;
+    color: #fff;
+    border: 3px solid #000;
+    border-radius: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px #fcc404;
+    margin-top: 5px;
+}
+
+/* Animación de click para ambos botones */
+.card button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px #000;
+}

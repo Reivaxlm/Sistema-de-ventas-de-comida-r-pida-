@@ -7,34 +7,40 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <title>Tienda | Burger Designers</title>
-    <link rel="stylesheet" href="styles.css"> </head>
+    <link rel="stylesheet" href="styles.css?v=<?php echo time(); ?>">
+</head>
 <body>
     <header>
-        <h1>TIENDA</h1>
-        <div class="container-icon">
-    <div class="container-cart-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-cart">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+    <a href="Principal.php" class="btn-volver-brutal">
+        <svg xmlns="http://www.w3.org/2000/svg" style="width:18px; height:18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-        <div class="count-products">
-            <span id="contador-productos">0</span>
-        </div>
-    </div>
+        VOLVER
+    </a>
 
-    <div class="container-cart-products hidden-cart">
-        <div class="row-product">
+    <h1>TIENDA</h1>
+
+    <div class="container-icon">
+        <div class="container-cart-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-cart" style="width: 35px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            </svg>
+            <div class="count-products">
+                <span id="contador-productos">0</span>
             </div>
-
-        <div class="cart-total">
-            <h3>Total:</h3>
-            <span class="total-pagar">$0</span>
         </div>
-        <p class="cart-empty">El carrito está vacío</p>
-        
-<a class="boton" href="cliente.html">Procesar Compra</a>
+
+        <div class="container-cart-products hidden-cart">
+            <div class="row-product"></div>
+            <div class="cart-total">
+                <h3>Total:</h3>
+                <span class="total-pagar">$0</span>
+            </div>
+            <p class="cart-empty">El carrito está vacío</p>
+            <a class="boton" href="cliente.html">PROCESAR COMPRA</a>
+        </div>
     </div>
-</div>
-        </header>
+</header>
         
 
     <div class="container-items">

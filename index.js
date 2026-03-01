@@ -88,6 +88,7 @@ document.addEventListener('click', e => {
 
 // Funcion para mostrar HTML
 const showHTML = () => {
+    // Control de visibilidad del mensaje "Carrito vacío"
     if (!allProducts.length) {
         cartEmpty.classList.remove('hidden');
         rowProduct.classList.add('hidden');
@@ -98,7 +99,7 @@ const showHTML = () => {
         cartTotal.classList.remove('hidden');
     }
 
-    // Limpiar HTML
+    // Limpiar HTML previo
     rowProduct.innerHTML = '';
 
     let total = 0;
@@ -106,21 +107,37 @@ const showHTML = () => {
 
     allProducts.forEach(product => {
         const containerProduct = document.createElement('div');
-        containerProduct.classList.add('cart-product');
+        // Clase para el estilo Neo-Brutalista que definimos en el CSS
+        containerProduct.classList.add('cart-product'); 
+        
+        containerProduct.style.display = 'flex';
+        containerProduct.style.justifyContent = 'space-between';
+        containerProduct.style.alignItems = 'center';
+        containerProduct.style.padding = '15px 0';
+        containerProduct.style.borderBottom = '2px solid #000';
 
         containerProduct.innerHTML = `
-            <div class="info-cart-product">
-                <span class="cantidad-producto-carrito">${product.quantity}</span>
-                <p class="titulo-producto-carrito">${product.title}</p>
-                <span class="precio-producto-carrito">${product.price}</span>
+            <div class="info-cart-product" style="display: flex; gap: 15px; align-items: center;">
+                <span class="cantidad-producto-carrito" style="font-weight: 900; background: #fcc404; padding: 2px 8px; border: 2px solid #000; border-radius: 5px;">
+                    ${product.quantity}
+                </span>
+                <div>
+                    <p class="titulo-producto-carrito" style="margin: 0; font-weight: 900; text-transform: uppercase; font-size: 14px;">
+                        ${product.title}
+                    </p>
+                    <span class="precio-producto-carrito" style="font-weight: 900; color: #dd1919;">
+                        ${product.price}
+                    </span>
+                </div>
             </div>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                stroke-width="2"
                 stroke="currentColor"
                 class="icon-close"
+                style="width: 20px; height: 20px; cursor: pointer; color: #000; transition: 0.2s;"
             >
                 <path
                     stroke-linecap="round"
@@ -132,6 +149,7 @@ const showHTML = () => {
 
         rowProduct.append(containerProduct);
 
+        // Cálculo de totales
         total = total + parseInt(product.quantity * product.price.slice(1));
         totalOfProducts = totalOfProducts + product.quantity;
     });
@@ -139,6 +157,6 @@ const showHTML = () => {
     valorTotal.innerText = `$${total}`;
     countProducts.innerText = totalOfProducts;
 
-    // Guardamos el total automáticamente cada vez que cambia el carrito
+    // Guardado en LocalStorage
     localStorage.setItem('montoFactura', total);
 };

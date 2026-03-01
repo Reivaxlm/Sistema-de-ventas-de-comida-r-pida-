@@ -1,223 +1,129 @@
-/* Globales */
-*::after,
-*::before,
-*{
+/* CONFIGURACIÓN BASE */
+body {
+    background-color: #fcc404; /* Fondo Amarillo Burger */
+    font-family: 'Arial Black', sans-serif;
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    padding: 20px;
 }
 
-body{
-    margin: 0 auto;
+/* HEADER ORGANIZADO */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 6px solid #000;
+    padding: 10px 30px;
+    box-shadow: 10px 10px 0px #000;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 30px;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+}
+
+/* BOTÓN VOLVER (Neo-brutalista) */
+.btn-volver-brutal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #000;
+    color: #fff !important;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 12px;
+    padding: 10px 15px;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0px #dd1919;
+    transition: 0.1s;
+}
+
+.btn-volver-brutal:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px #000;
+}
+
+/* CARRITO (EL CONTENEDOR FLOTANTE) */
+.container-cart-products {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background-color: #fff !important;
+    width: 350px !important;
+    z-index: 1000;
+    border: 6px solid #000 !important; 
+    box-shadow: 12px 12px 0px #000 !important; 
+    padding: 20px !important;
+}
+
+.hidden-cart { display: none; }
+
+/* TIENDA: CUADRÍCULA DE PRODUCTOS */
+.container-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
     max-width: 1200px;
-    font-family: 'Lato';
-    color: #333;
- 
+    margin: 0 auto;
 }
 
+.item {
+    background: #fff;
+    border: 5px solid #000;
+    box-shadow: 8px 8px 0px #000;
+    transition: 0.2s;
+}
 
+.item:hover { transform: translate(-4px, -4px); box-shadow: 12px 12px 0px #000; }
+
+.item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-bottom: 5px solid #000;
+}
+
+.info-product { padding: 20px; text-align: center; }
+
+.info-product h2 { font-size: 20px; text-transform: uppercase; margin: 10px 0; }
+
+.price { font-size: 24px; color: #dd1919; font-weight: 900; }
+
+.btn-add-cart {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-add-cart:hover { background: #dd1919; }
+
+/* CARRITO INTERNO */
+.cart-product {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 3px solid #000;
+    margin-bottom: 10px;
+}
 
 .boton {
-padding: 1px; /*espacio alrededor texto*/
-background-color: #000; /*color botón*/
-color: #ffffff; /*color texto*/
-text-decoration: none; /*decoración texto*/
-text-transform: uppercase; /*capitalización texto*/
-font-family: 'Helvetica', sans-serif; /*tipografía texto*/
-border-radius: 50px; /*bordes redondos*/
-width: 200px;
-
-margin: 0 auto;
-align-items: center;
-justify-content: center;
-display: flex;
-
-}
-
-
-.icon-cart{
-    width: 40px;
-    height: 40px;
-    stroke: #000;
-}
-
-.icon-cart:hover{
-    cursor: pointer;
-}
-
-img{
-    max-width: 100%;
-}
-
-/* Header */
-header{
-    display: flex;
-    justify-content: space-between;
-    padding: 30px 0 40px 0;
-}
-
-.container-icon{
-    position: relative;
-}
-
-.count-products{
-    position: absolute;
-    top: 55%;
-    right: 0;
-
-    background-color: #000;
+    display: block;
+    background: #dd1919;
     color: #fff;
-    width: 25px;
-    height: 25px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-}
-
-#contador-productos{
-    font-size: 12px;
-}
-
-.container-cart-products{
-    position: absolute;
-    top: 50px;
-    right: 0;
-
-    background-color: #fff;
-    width: 400px;
-    z-index: 1;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.20);
-    border-radius: 10px;
-    
-}
-
-.cart-product{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 30px;
-
-    border-bottom: 1px solid rgba(0, 0, 0, 0.20);
-
-}
-
-.info-cart-product{
-    display: flex;
-    justify-content: space-between;
-    flex: 0.8;
-}
-
-.titulo-producto-carrito{
-    font-size: 20px;
-}
-
-.precio-producto-carrito{
-    font-weight: 700;
-    font-size: 20px;
-    margin-left: 10px;
-}
-
-.cantidad-producto-carrito{
-    font-weight: 400;
-    font-size: 20px;
-}
-
-.icon-close{
-    width: 25px;
-    height: 25px;
-}
-
-.icon-close:hover{
-    stroke: red;
-    cursor: pointer;
-}
-
-.cart-total{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 0;
-    gap: 20px;
-}
-
-.cart-total h3{
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.total-pagar{
-    font-size: 20px;
-    font-weight: 900;
-}
-
-.hidden-cart{
-    display: none;
-}
-
-
-
-
-/* Main */
-.container-items{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.item{
-    border-radius: 10px;
-}
-
-.item:hover{
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.20);
-}
-
-.item img{
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
-    transition: all .5s;
-}
-
-.item figure{
-    overflow: hidden;
-}
-
-.item:hover img{
-    transform: scale(1.2);
-}
-
-.info-product{
-    padding: 15px 30px;
-    line-height: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.price{
-    font-size: 18px;
-    font-weight: 900;
-}
-
-.info-product button{
-    border: none;
-    background: none;
-    background-color: #000;
-    color: #fff;
-    padding: 15px 10px;
-    cursor: pointer;
-}
-
-.cart-empty{
-    padding: 20px;
     text-align: center;
-}
-
-
-.hidden{
-    display: none;
+    padding: 15px;
+    text-decoration: none;
+    font-weight: 900;
+    border: 4px solid #000;
+    box-shadow: 5px 5px 0px #000;
 }

@@ -51,29 +51,6 @@ while($m = mysqli_fetch_assoc($res_met)){ $lab_met[] = $m['metodo_pago']; $dat_m
     <title>Dashboard Maestro | Burger Designers</title>
     <link rel="stylesheet" type="text/css" href="css/admin.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: 'Poppins', sans-serif; background: #f0f0f0; padding: 20px; color: #1a1a1a; }
-        .wrapper { max-width: 1300px; margin: auto; }
-        .grid-main { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        
-        /* TARJETAS */
-        .card { background: #fff; padding: 20px; border: 3px solid #000; border-radius: 12px; box-shadow: 6px 6px 0px #000; position: relative; }
-        .card-yellow { background: #fcc404; box-shadow: 6px 6px 0px #000; }
-        .card-dark { background: #1a1a1a; color: #fff; border-color: #fcc404; }
-        
-        /* TABLAS */
-        .table-container { background: #fff; border: 3px solid #000; border-radius: 12px; padding: 20px; margin-top: 25px; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { background: #fcc404; color: #000; padding: 12px; border: 2px solid #000; text-transform: uppercase; font-size: 13px; }
-        td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; font-size: 14px; }
-        tr:hover { background: #fffdf5; }
-
-        .btn-excel { background: #28a745; color: white; padding: 10px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; border: 3px solid #000; display: inline-block; transition: 0.3s; }
-        .btn-excel:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px #000; }
-        
-        .badge { background: #000; color: #fcc404; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
-        .trend { font-size: 12px; font-weight: bold; }
-    </style>
 </head>
 <body>
 

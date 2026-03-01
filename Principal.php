@@ -2,51 +2,43 @@
 require('connection.php');
 session_start();
 
-// Verificación de sesión
 if(!isset($_SESSION['id'])){ 
     header("Location: index.html"); 
     exit(); 
 }
 
 $id = $_SESSION['id'];
-$nombre_sesion = $_SESSION['username'] ?? 'Vendedor'; // Usamos el username de registro si no hay perfil
+$nombre_sesion = $_SESSION['username'] ?? 'Vendedor';
 
-// 1. CONSULTA DE PERFIL CORREGIDA
-// Buscamos en la tabla perfil donde el id_usuario coincida con el de la sesión
 $sql = "SELECT * FROM perfil WHERE id_usuario = '$id'";
 $res = mysqli_query($conn, $sql);
 $mostrar = mysqli_fetch_array($res);
 
-// 2. LÓGICA DE IMAGEN MEJORADA
-// Primero verificamos si existe un registro y si tiene una ruta de imagen
 if ($mostrar && !empty($mostrar['imagen'])) {
-    // Si la imagen guardada ya es una ruta (ej: imgs/foto.jpg), la usamos directamente
     $img_vendedor = $mostrar['imagen'];
 } else {
-    // Si no hay nada, imagen por defecto
     $img_vendedor = 'imgs/Man.jpg'; 
 }
 
-// --- LÓGICA DE DATOS PARA LA BARRA LATERAL ---
+// CONFIGURACIÓN VENEZUELA
+date_default_timezone_set('America/Caracas'); 
 $hoy = date('Y-m-d');
 
-// 1. Monto Total del Día (Sumamos de la tabla cliente que es donde guardas las ventas finales)
-$query_total = mysqli_query($conn, "SELECT SUM(monto) as gran_total FROM cliente WHERE DATE(reg_date) = '$hoy'");
+// 1. Total del Día (Usamos LIKE para asegurar que detecte la fecha en Venezuela)
+$query_total = mysqli_query($conn, "SELECT SUM(monto) as gran_total FROM cliente WHERE reg_date LIKE '$hoy%'");
 $dato_total = mysqli_fetch_assoc($query_total);
 $monto_total_dia = $dato_total['gran_total'] ?? 0;
 
-// 2. Historial de últimas 3 ventas
+// 2. Conteo de Ventas
+$query_conteo = mysqli_query($conn, "SELECT COUNT(*) as total FROM cliente WHERE reg_date LIKE '$hoy%'");
+$v_data = mysqli_fetch_assoc($query_conteo);
+$total_ventas_conteo = $v_data['total'] ?? 0;
+
+// 3. RECUPERAR HISTORIAL (Últimos 3 movimientos)
 $query_historial = mysqli_query($conn, "SELECT monto, reg_date FROM cliente ORDER BY id DESC LIMIT 3");
 
-// 3. Conteo de atenciones
-$ventas_vendedor = mysqli_query($conn, "SELECT COUNT(*) as total FROM cliente WHERE DATE(reg_date) = '$hoy'");
-$v_data = mysqli_fetch_assoc($ventas_vendedor);
-
-// Definimos la meta del día
 $meta_del_dia = 500.00; 
 $porcentaje_meta = ($monto_total_dia / $meta_del_dia) * 100;
-
-// Evitar que la barra pase del 100% visualmente
 $ancho_barra = ($porcentaje_meta > 100) ? 100 : $porcentaje_meta;
 
 $pedidos_cola = mysqli_query($conn, "SELECT * FROM cliente WHERE DATE(reg_date) = CURDATE() AND estado != 'entregado' ORDER BY reg_date ASC");
@@ -55,108 +47,75 @@ $pedidos_cola = mysqli_query($conn, "SELECT * FROM cliente WHERE DATE(reg_date) 
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Burger Designers | Panel Vendedor</title>
+    <title>Burger Designers | Panel</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body class="body-dashboard">
+
 <nav class="nav">
-    <div class="nav__logo"><h3>BURGER DESIGNERS</h3></div>
-    <ul class="list">
-        <li class="list__item">
-            <div class="list__button">
-                <img src="assets/dashboard.svg" class="list__img">
-                <a href="Principal.php" class="nav__link">Inicio / Panel</a>
-            </div>
-        </li>
-        <li class="list__item">
-            <div class="list__button">
-                <img src="assets/docs.svg" class="list__img">
-                <a href="pedido.php" class="nav__link">Hacer Pedido</a>
-            </div>
-        </li>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h3 style="font-weight: 900; letter-spacing: -1px;">BURGER <span style="color: #fcc404;">DESIGNERS</span></h3>
+    </div>
 
-        <li style="padding: 20px 20px 5px; font-size: 11px; color: #fcc404; text-transform: uppercase;">Balance de Hoy</li>
-        <div style="padding: 0 20px;">
-            <div style="background: #000; padding: 15px; border-radius: 10px; border: 1px solid #333; color: #fff;">
-                <span style="color: #fcc404; font-size: 11px; display: block; margin-bottom: 5px;">TOTAL VENDIDO:</span>
-                <h2 style="margin: 0; font-size: 22px;">$<?php echo number_format($monto_total_dia, 2); ?></h2>
-                <small style="color: #888;"><?php echo $v_data['total']; ?> ventas hoy</small>
-            </div>
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+        <a href="Principal.php" class="nav-link" style="background: #f0f0f0; border: 2px solid #000;">🏠 INICIO</a>
+        <a href="pedido.php" class="nav-link">🍔 NUEVO PEDIDO</a>
+    </div>
+
+    <div class="seccion-header">Caja de Hoy</div>
+    <div class="card-total-compact">
+        <small>Total Acumulado</small>
+        <h2>$<?php echo number_format($monto_total_dia, 2); ?></h2>
+        <div class="badge-ventas">
+            <?php echo $total_ventas_conteo; ?> VENTAS HOY
         </div>
+    </div>
 
-        <li style="padding: 20px 20px 5px; font-size: 11px; color: #999; text-transform: uppercase;">Últimas Ventas</li>
-        <div style="padding: 0 20px;">
-            <?php while($reg = mysqli_fetch_assoc($query_historial)): ?>
-                <div style="border-left: 3px solid #fcc404; padding-left: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 0 5px 5px 0;">
-                    <b style="color: #fff; display: block; font-size: 13px;">Monto: $<?php echo number_format($reg['monto'], 2); ?></b>
-                    <small style="color: #666; font-size: 10px;"><?php echo date('H:i A', strtotime($reg['reg_date'])); ?></small>
-                </div>
-            <?php endwhile; ?>
-        </div>
-
-        <div class="cola-pedidos" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
-            <?php while($pedido = mysqli_fetch_assoc($pedidos_cola)): ?>
-                <div class="ticket-pedido" style="background: #fff; border-left: 5px solid #fcc404; padding: 15px; border-radius: 8px; position: relative;">
-                    <span style="font-size: 10px; color: #999;"><?php echo date('H:i', strtotime($pedido['reg_date'])); ?></span>
-                    <h5 style="margin: 5px 0;"><?php echo $pedido['nombre_cliente']; ?></h5>
-                    <p style="font-size: 12px; color: #555;">Monto: $<?php echo $pedido['monto']; ?></p>
-                    
-                    <div style="margin-top: 10px;">
-                        <select onchange="actualizarEstado(<?php echo $pedido['id']; ?>, this.value)" style="width: 100%; padding: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 12px;">
-                            <option value="pendiente">Pendiente ⏳</option>
-                            <option value="preparando">En Cocina 🔥</option>
-                            <option value="listo">Listo ✅</option>
-                            <option value="entregado">Entregado 🏁</option>
-                        </select>
+    <div class="seccion-header">Últimos Movimientos</div>
+    <div style="max-height: 150px; overflow-y: auto;">
+        <?php 
+        // Aseguramos que la variable exista antes de usarla
+        if(isset($query_historial) && mysqli_num_rows($query_historial) > 0):
+            mysqli_data_seek($query_historial, 0); 
+            while($reg = mysqli_fetch_assoc($query_historial)): ?>
+                <div class="item-brutalista item-historial">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <b style="font-size: 14px;">$<?php echo number_format($reg['monto'], 2); ?></b>
+                        <small style="font-size: 10px; color: #666;"><?php echo date('H:i', strtotime($reg['reg_date'])); ?></small>
                     </div>
                 </div>
-            <?php endwhile; ?>
-        </div>
+            <?php endwhile; 
+        endif; ?>
+    </div>
 
-        <div style="padding: 20px;">
-            <h3 style="margin-bottom: 15px;">🍔 Pedidos en Cola (Pendientes)</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
-                
-                <?php
-                // Consultamos solo los pedidos de hoy que no estén 'entregados'
-                $query_cola = mysqli_query($conn, "SELECT * FROM cliente WHERE DATE(reg_date) = CURDATE() AND (estado != 'entregado' OR estado IS NULL) ORDER BY reg_date ASC");
-                
-                while($pedido = mysqli_fetch_assoc($query_cola)):
-                    // Definimos color según estado
-                    $color_borde = "#fcc404"; // Pendiente
-                    if($pedido['estado'] == 'preparando') $color_borde = "#dd1919"; // Rojo
-                    if($pedido['estado'] == 'listo') $color_borde = "#28a745"; // Verde
-                ?>
-                
-                <div id="card-<?php echo $pedido['id']; ?>" style="background: white; border-left: 8px solid <?php echo $color_borde; ?>; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                    <div style="display: flex; justify-content: space-between;">
-                        <strong>#<?php echo $pedido['id']; ?> - <?php echo $pedido['nombre_cliente']; ?></strong>
-                        <span style="font-size: 12px; color: #888;"><?php echo date('H:i', strtotime($pedido['reg_date'])); ?></span>
-                    </div>
-                    <p style="font-size: 13px; color: #666; margin: 5px 0;">Monto: $<?php echo $pedido['monto']; ?></p>
-                    
-                    <select onchange="cambiarEstado(<?php echo $pedido['id']; ?>, this.value)" style="width: 100%; padding: 8px; border-radius: 5px; margin-top: 10px; cursor: pointer;">
-                        <option value="pendiente" <?php if($pedido['estado'] == 'pendiente') echo 'selected'; ?>>⏳ Pendiente</option>
-                        <option value="preparando" <?php if($pedido['estado'] == 'preparando') echo 'selected'; ?>>🔥 Preparando</option>
-                        <option value="listo" <?php if($pedido['estado'] == 'listo') echo 'selected'; ?>>✅ Listo para retirar</option>
-                        <option value="entregado">🏁 Entregado (Quitar de lista)</option>
-                    </select>
+    <div class="seccion-header">Pedidos Activos</div>
+    <div style="flex: 1; overflow-y: auto;">
+        <?php mysqli_data_seek($pedidos_cola, 0); ?>
+        <?php while($pedido = mysqli_fetch_assoc($pedidos_cola)): 
+            $status_color = ($pedido['estado'] == 'preparando') ? "#dd1919" : (($pedido['estado'] == 'listo') ? "#28a745" : "#fcc404");
+        ?>
+            <div class="item-brutalista">
+                <div style="margin-bottom: 5px;">
+                    <b style="font-size: 12px;"><?php echo strtoupper($pedido['nombre_cliente']); ?></b>
                 </div>
-
-                <?php endwhile; ?>
+                <div style="font-size: 20px; font-weight: 900; margin-bottom: 10px;">$<?php echo number_format($pedido['monto'], 2); ?></div>
+                
+                <select onchange="actualizarEstado(<?php echo $pedido['id']; ?>, this.value)" 
+                    style="width:100%; border:2px solid #000; font-weight:900; border-radius:5px;">
+                    <option value="pendiente" <?php if($pedido['estado'] == 'pendiente') echo 'selected'; ?>>PENDIENTE</option>
+                    <option value="preparando" <?php if($pedido['estado'] == 'preparando') echo 'selected'; ?>>COCINANDO</option>
+                    <option value="listo" <?php if($pedido['estado'] == 'listo') echo 'selected'; ?>>LISTO</option>
+                    <option value="entregado">ENTREGADO</option>
+                </select>
             </div>
-        </div>
+        <?php endwhile; ?>
+    </div>
 
-        <li style="margin-top: 30px;" class="list__item">
-            <div class="list__button">
-                <a href="login.html" class="nav__link" style="color:#dd1919; font-weight:bold;">🔴 Cerrar Sesion</a>
-            </div>
-        </li>
-    </ul>
-    <div id="reloj-vendedor" style="text-align: center; color: #fff; padding: 15px; font-weight: bold; font-family: monospace; font-size: 14px;">00:00:00</div>
+    <a href="index.html" class="nav-link" style="margin-top: 20px; background: #000; color: #fff; text-align: center; border: 3px solid #000; box-shadow: 4px 4px 0px #dd1919;">
+        CERRAR SESIÓN
+    </a>
 </nav>
-
 <main class="main-content">
     <div class="perfil-completo">
         <div style="display: flex; align-items: stretch; gap: 15px; margin-bottom: 20px;">
@@ -215,15 +174,31 @@ $pedidos_cola = mysqli_query($conn, "SELECT * FROM cliente WHERE DATE(reg_date) 
 </main>
 
 <script>
-    function actualizarEstado(idPedido, nuevoEstado) {
-    fetch('actualizar_estado_pedido.php', {
+function actualizarEstado(idPedido, nuevoEstado) {
+    // Usamos fetch para conectarnos con tu archivo PHP
+    fetch('actualizar_estado.php', {
         method: 'POST',
-        body: JSON.stringify({id: idPedido, estado: nuevoEstado}),
-        headers: {'Content-Type': 'application/json'}
-    }).then(res => {
-        if(nuevoEstado === 'entregado') {
-            location.reload(); // Recargamos para que desaparezca de la cola
+        body: JSON.stringify({
+            id: idPedido,
+            estado: nuevoEstado
+        }),
+        headers: {
+            'Content-Type': 'application/json'
         }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Recargamos la página para que se vean los cambios (bordes de colores)
+            // y para que si es "entregado" desaparezca de la lista
+            location.reload(); 
+        } else {
+            alert('Error: No se pudo actualizar en la base de datos');
+            console.error(data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error en la petición:', error);
     });
 }
 </script>
