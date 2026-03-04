@@ -42,6 +42,32 @@ while($f = mysqli_fetch_assoc($res_sem)){ $lab_sem[] = date("d M", strtotime($f[
 $res_met = mysqli_query($conn, "SELECT metodo_pago, COUNT(*) as cant FROM cliente GROUP BY metodo_pago");
 $lab_met = []; $dat_met = [];
 while($m = mysqli_fetch_assoc($res_met)){ $lab_met[] = $m['metodo_pago']; $dat_met[] = $m['cant']; }
+
+// --- LÓGICA DE GESTIÓN DE PERSONAL ---
+// A. Borrar Usuario
+if (isset($_GET['delete_user'])) {
+    $id_del = intval($_GET['delete_user']);
+    mysqli_query($conn, "DELETE FROM registro WHERE id = $id_del");
+    echo "<script>alert('Usuario eliminado'); window.location.href='admin.php';</script>";
+}
+
+// B. Editar Usuario
+if (isset($_POST['btn_update_user'])) {
+    $id_upd = $_POST['id_usuario'];
+    $nom = mysqli_real_escape_string($conn, $_POST['nombre']);
+    $usr = mysqli_real_escape_string($conn, $_POST['usuario']);
+    
+    // Si escribes una clave, se cambia; si no, queda la anterior
+    if (!empty($_POST['password'])) {
+        $pass = $_POST['password'];
+        $sql = "UPDATE registro SET name='$nom', username='$usr', password='$pass' WHERE id=$id_upd";
+    } else {
+        $sql = "UPDATE registro SET name='$nom', username='$usr' WHERE id=$id_upd";
+    }
+    
+    mysqli_query($conn, $sql);
+    echo "<script>alert('Datos actualizados'); window.location.href='admin.php';</script>";
+}
 ?>
 
 <!DOCTYPE html>
@@ -142,7 +168,6 @@ while($m = mysqli_fetch_assoc($res_met)){ $lab_met[] = $m['metodo_pago']; $dat_m
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Usuario</th>
-                <th>Fecha Ingreso</th>
                 <th>Acciones</th>
             </tr>
             <?php 
@@ -152,10 +177,9 @@ while($m = mysqli_fetch_assoc($res_met)){ $lab_met[] = $m['metodo_pago']; $dat_m
                 <td>#<?php echo $u['id']; ?></td>
                 <td><strong><?php echo $u['name']; ?></strong></td>
                 <td><?php echo $u['username']; ?></td>
-                <td><?php echo $u['reg_date']; ?></td>
                 <td>
-                    <a href="modificar.php?id=<?php echo $u['id']; ?>" style="color: blue; text-decoration:none; font-weight:bold;">Editar</a> | 
-                    <a href="#" onclick="eliminar(<?php echo $u['id']; ?>)" style="color: red; text-decoration:none; font-weight:bold;">Borrar</a>
+                    <button onclick='abrirModalEditar(<?php echo json_encode($u); ?>)' style="background:none; border:none; color:blue; cursor:pointer; font-weight:bold;">Editar</button> | 
+                    <a href="?delete_user=<?php echo $u['id']; ?>" onclick="return confirm('¿Eliminar a <?php echo $u['name']; ?>?')" style="color: red; text-decoration:none; font-weight:bold;">Borrar</a>
                 </td>
             </tr>
             <?php endwhile; ?>
@@ -202,7 +226,7 @@ while($m = mysqli_fetch_assoc($res_met)){ $lab_met[] = $m['metodo_pago']; $dat_m
                     while($i = mysqli_fetch_assoc($insu)) echo "<option value='{$i['id']}'>{$i['insumo']}</option>";
                     ?>
                 </select>
-                <input type="number" name="cant_receta" placeholder="Cantidad que consume" required style="padding: 8px; border: 2px solid #000; border-radius: 5px;">
+                <input type="number" name="cant_receta" placeholder="Cantidad que consume" step="0.01" required style="padding: 8px; border: 2px solid #000; border-radius: 5px;">
                 <button type="submit" name="btn_receta" class="btn-excel" style="background: #000; color: #fff;">🔗 VINCULAR INGREDIENTE</button>
             </form>
         </div>
@@ -217,7 +241,7 @@ while($m = mysqli_fetch_assoc($res_met)){ $lab_met[] = $m['metodo_pago']; $dat_m
                     <th>Ingrediente</th>
                     <th>Stock</th>
                     <th>Estado</th>
-                </tr>
+                    <th>Acciones</th> </tr>
                 <?php 
                 $res_inv = mysqli_query($conn, "SELECT * FROM inventario");
                 while($inv = mysqli_fetch_assoc($res_inv)): 
@@ -225,8 +249,11 @@ while($m = mysqli_fetch_assoc($res_met)){ $lab_met[] = $m['metodo_pago']; $dat_m
                 ?>
                 <tr>
                     <td><?php echo $inv['insumo']; ?></td>
-                    <td style="font-weight:bold;"><?php echo $inv['cantidad']; ?></td>
+                    <td style="font-weight:bold;"><?php echo $inv['cantidad']; ?> <?php echo $inv['unidad']; ?></td>
                     <td><span style="color:<?php echo $color_stock; ?>;">● <?php echo ($inv['cantidad'] <= 10) ? 'Bajo' : 'Óptimo'; ?></span></td>
+                    <td>
+                        <a href="editar_insumo.php?id=<?php echo $inv['id']; ?>" style="color: blue; text-decoration:none; font-weight:bold;">✏️ Editar</a>
+                    </td>
                 </tr>
                 <?php endwhile; ?>
             </table>
@@ -234,6 +261,41 @@ while($m = mysqli_fetch_assoc($res_met)){ $lab_met[] = $m['metodo_pago']; $dat_m
     </div>
 </div>
 
+<div id="modalPersonal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:999;">
+    <div style="background:#fff; width:350px; margin:10% auto; padding:20px; border:5px solid #000; box-shadow:10px 10px 0px #fcc404;">
+        <h2 style="margin-top:0;">EDITAR PERSONAL</h2>
+        <form method="POST">
+            <input type="hidden" name="id_usuario" id="edit_id">
+            
+            <label style="font-weight:bold; display:block; margin-bottom:5px;">Nombre:</label>
+            <input type="text" name="nombre" id="edit_nombre" required style="width:90%; padding:8px; border:3px solid #000; margin-bottom:15px;">
+            
+            <label style="font-weight:bold; display:block; margin-bottom:5px;">Usuario:</label>
+            <input type="text" name="usuario" id="edit_usuario" required style="width:90%; padding:8px; border:3px solid #000; margin-bottom:15px;">
+            
+            <label style="font-weight:bold; display:block; margin-bottom:5px;">Contraseña (opcional):</label>
+            <input type="password" name="password" placeholder="Dejar vacío para no cambiar" style="width:90%; padding:8px; border:3px solid #000; margin-bottom:20px;">
+            
+            <div style="display:flex; gap:10px;">
+                <button type="submit" name="btn_update_user" class="btn-excel" style="background:#4caf50; flex:1;">GUARDAR</button>
+                <button type="button" onclick="cerrarModal()" class="btn-excel" style="background:#666; flex:1;">CANCELAR</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function abrirModalEditar(datos) {
+    document.getElementById('edit_id').value = datos.id;
+    document.getElementById('edit_nombre').value = datos.name;
+    document.getElementById('edit_usuario').value = datos.username;
+    document.getElementById('modalPersonal').style.display = 'block';
+}
+
+function cerrarModal() {
+    document.getElementById('modalPersonal').style.display = 'none';
+}
+</script>
 <script>
 // --- GRÁFICO DE LÍNEAS ---
 const ctxLine = document.getElementById('lineChart').getContext('2d');

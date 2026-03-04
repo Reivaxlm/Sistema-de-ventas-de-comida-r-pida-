@@ -51,4 +51,20 @@ if (isset($_POST['btn_receta'])) {
         echo "Error al guardar: " . mysqli_error($conn);
     }
 }
+
+//Agregar nuevo insumo
+if (isset($_POST['btn_guardar_insumo'])) {
+    // Recibir y limpiar datos
+    $nombre = mysqli_real_escape_string($conn, $_POST['nuevo_insumo']);
+    $cantidad = mysqli_real_escape_string($conn, $_POST['nueva_cantidad']);
+    $unidad = mysqli_real_escape_string($conn, $_POST['nueva_unidad']);
+
+    $sql = "INSERT INTO inventario (insumo, cantidad, unidad) VALUES ('$nombre', '$cantidad', '$unidad')";
+    
+    if (mysqli_query($conn, $sql)) {
+        echo "<script>alert('Insumo guardado correctamente'); window.location='admin.php';</script>";
+    } else {
+        echo "Error: " . mysqli_error($conn);
+    }
+}
 ?>

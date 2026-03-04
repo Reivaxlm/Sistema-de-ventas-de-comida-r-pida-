@@ -7,7 +7,12 @@ require('fpdf/fpdf.php');
 include 'connection.php';
 
 // 1. Obtener el último pedido
-$sql = "SELECT * FROM cliente ORDER BY id DESC LIMIT 1";
+$id_pedido = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if ($id_pedido > 0) {
+    $sql = "SELECT * FROM cliente WHERE id = $id_pedido";
+} else {
+    $sql = "SELECT * FROM cliente ORDER BY id DESC LIMIT 1";
+}
 $resultado = mysqli_query($conn, $sql);
 $cliente = mysqli_fetch_assoc($resultado);
 

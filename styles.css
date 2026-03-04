@@ -49,13 +49,13 @@ header h1 {
 /* CARRITO (EL CONTENEDOR FLOTANTE) */
 .container-cart-products {
     position: absolute;
-    top: 80px;
-    right: 20px;
+    top: 108px;
+    right: 21px;
     background-color: #fff !important;
     width: 350px !important;
     z-index: 1000;
     border: 6px solid #000 !important; 
-    box-shadow: 12px 12px 0px #000 !important; 
+    box-shadow: 11px 12px 0px #000 !important; 
     padding: 20px !important;
 }
 
@@ -64,48 +64,82 @@ header h1 {
 /* TIENDA: CUADRÍCULA DE PRODUCTOS */
 .container-items {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    /* Creamos columnas de máximo 350px. Si solo hay uno, medirá 350px, no toda la pantalla */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 350px)); 
+    gap: 40px;
+    padding: 40px;
+    justify-content: center; /* Centra los productos si hay pocos */
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .item {
     background: #fff;
-    border: 5px solid #000;
-    box-shadow: 8px 8px 0px #000;
-    transition: 0.2s;
+    border: 6px solid #000;
+    box-shadow: 10px 10px 0px #000;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Para que todas midan lo mismo */
 }
 
-.item:hover { transform: translate(-4px, -4px); box-shadow: 12px 12px 0px #000; }
+/* Efecto al pasar el mouse para que parezca que flota */
+.item:hover {
+    transform: translate(-5px, -5px);
+    box-shadow: 15px 15px 0px #000;
+}
+
+/* LA IMAGEN DEL PRODUCTO */
+.item figure {
+    margin: 0;
+    padding: 0;
+    border-bottom: 5px solid #000; /* Línea que separa la foto del texto */
+    height: 250px;
+}
 
 .item img {
     width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-bottom: 5px solid #000;
+    height: 100%;
+    object-fit: cover; /* Para que la foto no se deforme */
 }
 
-.info-product { padding: 20px; text-align: center; }
+/* LA INFORMACIÓN (Nombre, Precio, Botón) */
+.info-product {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Separa el título del precio y del botón */
+    flex-grow: 1;
+}
 
-.info-product h2 { font-size: 20px; text-transform: uppercase; margin: 10px 0; }
+.info-product h2 {
+    font-size: 1.2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin: 0;
+}
 
-.price { font-size: 24px; color: #dd1919; font-weight: 900; }
+.price {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #dd1919; /* Precio en rojo resaltado */
+    margin: 10px 0;
+}
 
+/* EL BOTÓN DE AÑADIR (Neo-brutalista) */
 .btn-add-cart {
-    width: 100%;
-    background: #000;
+    background-color: #000;
     color: #fff;
-    border: none;
     padding: 15px;
+    border: none;
     font-weight: 900;
     text-transform: uppercase;
     cursor: pointer;
-    margin-top: 10px;
+    transition: background 0.2s;
 }
 
-.btn-add-cart:hover { background: #dd1919; }
-
+.btn-add-cart:hover {
+    background-color: #dd1919; /* Cambia a rojo al tocarlo */
+}
 /* CARRITO INTERNO */
 .cart-product {
     display: flex;
@@ -126,4 +160,28 @@ header h1 {
     font-weight: 900;
     border: 4px solid #000;
     box-shadow: 5px 5px 0px #000;
+}
+
+/* CONTENEDOR DEL ICONO */
+.container-cart-icon {
+    position: relative; /* OBLIGATORIO para que el hijo se posicione bien */
+    cursor: pointer;
+    padding: 10px;
+}
+
+.icon-cart {
+    width: 40px;
+    height: 40px;
+}
+
+/* EL CÍRCULO DEL CONTADOR */
+.count-products {
+    position: absolute;
+    top: 40px; 
+    right: 16px;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

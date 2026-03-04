@@ -56,9 +56,11 @@ productsList.addEventListener('click', e => {
 
 // Escuchar clics para eliminar productos
 rowProduct.addEventListener('click', e => {
-    if (e.target.classList.contains('icon-close')) {
-        const product = e.target.parentElement;
-        const title = product.querySelector('p').textContent;
+    // Buscamos si se hizo clic en el SVG o en un camino del SVG (path)
+    if (e.target.closest('.icon-close')) {
+        const productElement = e.target.closest('.cart-product');
+        // Importante: El título debe extraerse exactamente de donde se crea en showHTML
+        const title = productElement.querySelector('.titulo-producto-carrito').textContent;
 
         allProducts = allProducts.filter(
             product => product.title !== title
@@ -106,50 +108,27 @@ const showHTML = () => {
     let totalOfProducts = 0;
 
     allProducts.forEach(product => {
-        const containerProduct = document.createElement('div');
-        // Clase para el estilo Neo-Brutalista que definimos en el CSS
-        containerProduct.classList.add('cart-product'); 
-        
-        containerProduct.style.display = 'flex';
-        containerProduct.style.justifyContent = 'space-between';
-        containerProduct.style.alignItems = 'center';
-        containerProduct.style.padding = '15px 0';
-        containerProduct.style.borderBottom = '2px solid #000';
+    const containerProduct = document.createElement('div');
+    containerProduct.classList.add('cart-product');
 
-        containerProduct.innerHTML = `
-            <div class="info-cart-product" style="display: flex; gap: 15px; align-items: center;">
-                <span class="cantidad-producto-carrito" style="font-weight: 900; background: #fcc404; padding: 2px 8px; border: 2px solid #000; border-radius: 5px;">
-                    ${product.quantity}
-                </span>
-                <div>
-                    <p class="titulo-producto-carrito" style="margin: 0; font-weight: 900; text-transform: uppercase; font-size: 14px;">
-                        ${product.title}
-                    </p>
-                    <span class="precio-producto-carrito" style="font-weight: 900; color: #dd1919;">
-                        ${product.price}
-                    </span>
-                </div>
+    containerProduct.innerHTML = `
+        <div class="info-cart-product" style="display: flex; align-items: center; gap: 10px;">
+            <span class="cantidad-producto-carrito" style="font-weight:900; background:#fcc404; padding:5px; border:2px solid #000;">
+                ${product.quantity}
+            </span>
+            <div>
+                <p class="titulo-producto-carrito" style="margin:0; font-weight:900;">${product.title}</p>
+                <span class="precio-producto-carrito" style="color:#dd1919; font-weight:900;">${product.price}</span>
             </div>
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-                class="icon-close"
-                style="width: 20px; height: 20px; cursor: pointer; color: #000; transition: 0.2s;"
-            >
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                />
+        </div>
+        <div class="icon-close" style="cursor:pointer; background:#000; color:#fff; padding:5px; display:flex;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
-        `;
-
-        rowProduct.append(containerProduct);
-
-        // Cálculo de totales
+        </div>
+    `;
+    rowProduct.append(containerProduct);
+    // Cálculo de totales
         total = total + parseInt(product.quantity * product.price.slice(1));
         totalOfProducts = totalOfProducts + product.quantity;
     });

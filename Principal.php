@@ -130,7 +130,9 @@ $pedidos_cola = mysqli_query($conn, "SELECT * FROM cliente WHERE DATE(reg_date) 
                     <img src="<?php echo $img_vendedor; ?>" class="avatar-grande" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #fcc404;">
                 </div>
                 <div style="margin-left: 20px;">
-                    <h1 class="nombre-vendedor" style="margin: 0; font-size: 24px; color: #333;"><?php echo $mostrar['nombre'] ?? $nombre_sesion; ?></h1>
+                    <h1 class="nombre-vendedor" style="margin: 0; font-size: 24px; color: #333;">
+                        <?php echo ($mostrar['nombre'] ?? $nombre_sesion) . " " . ($mostrar['apellido'] ?? ''); ?>
+                    </h1>
                     <div class="badge-status" style="margin-top: 5px;">
                         <span class="id-tag" style="background:#000; color:#fff; padding:3px 8px; border-radius:4px; font-size: 11px;">ID #<?php echo $id; ?></span>
                         <span class="turno-tag" style="color:#2e7d32; font-weight:bold; font-size: 13px; margin-left: 10px;"> ● TURNO ACTIVO</span>
